@@ -22,7 +22,7 @@ defmodule Snake.Scene.Game do
     state = %{
       width: number_of_columns,
       height: number_of_rows,
-      snake: %{body: [{9, 9}, {10, 9}, {11, 9}], size: 5, direction: {1, 0}}
+      snake: %{body: [{9, 9}, {10, 9}, {11, 9}], direction: {1, 0}}
     }
 
     # start timer
@@ -51,14 +51,8 @@ defmodule Snake.Scene.Game do
   end
 
   defp move_snake(%{snake: snake} = state) do
-    %{body: body, size: size, direction: direction} = snake
-
-    # new head
-    [head | _] = body
-    new_head = move(state, head, direction)
-
-    # truncate body
-    new_body = Enum.take([new_head | body], size)
+    %{body: body, direction: direction} = snake
+    new_body = Enum.map(body, &move(state, &1, direction))
 
     state
     |> put_in([:snake, :body], new_body)
