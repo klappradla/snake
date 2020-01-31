@@ -52,13 +52,22 @@ defmodule Snake.Scene.Game do
 
   defp move_snake(%{snake: snake} = state) do
     %{body: body, direction: direction} = snake
-    new_body = Enum.map(body, &move(state, &1, direction))
+
+    # new head
+    [head | _] = body
+    new_head = move(state, head, direction)
+
+    # truncate body
+    size = length(body)
+    new_body = Enum.take([new_head | body], size)
 
     state
     |> put_in([:snake, :body], new_body)
   end
 
   defp move(%{width: w, height: h}, {pos_x, pos_y}, {vec_x, vec_y}) do
+    # We use the remainder function `rem` to make the snake appear from the opposite side
+    # of the screen when it reaches the limits of the graph.
     x = rem(pos_x + vec_x + w, w)
     y = rem(pos_y + vec_y + h, h)
     {x, y}
