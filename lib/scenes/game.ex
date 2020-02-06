@@ -72,4 +72,27 @@ defmodule Snake.Scene.Game do
     y = rem(pos_y + vec_y + h, h)
     {x, y}
   end
+
+  def handle_input({:key, {"left", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {-1, 0})}
+  end
+
+  def handle_input({:key, {"right", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {1, 0})}
+  end
+
+  def handle_input({:key, {"up", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {0, -1})}
+  end
+
+  def handle_input({:key, {"down", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {0, 1})}
+  end
+
+  # Ignore all the other inputs
+  def handle_input(_input, _context, state), do: {:noreply, state}
+  # Change the snake's current direction.
+  defp update_snake_direction(state, direction) do
+    put_in(state, [:snake, :direction], direction)
+  end
 end
